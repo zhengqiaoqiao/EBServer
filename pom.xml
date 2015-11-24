@@ -1,0 +1,122 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.qiao</groupId>
+  <artifactId>EBServer</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>EBServer</name>
+  <url>http://maven.apache.org</url>
+
+  <properties>
+  	<jersey.version>2.17</jersey.version>
+  	<jackson.version>1.9.13</jackson.version>
+  	<slf4j.version>1.4.3</slf4j.version>
+	<log4j.version>1.2.16</log4j.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+  
+  <build>
+      <plugins>
+          <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-compiler-plugin</artifactId>
+              <version>2.5.1</version>
+              <inherited>true</inherited>
+              <configuration>
+                  <source>1.7</source>
+                  <target>1.7</target>
+                  <encoding>${project.build.sourceEncoding}</encoding>
+              </configuration>
+          </plugin>
+
+          <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>exec-maven-plugin</artifactId>
+              <version>1.2.1</version>
+              <executions>
+                  <execution>
+                      <goals>
+                          <goal>java</goal>
+                      </goals>
+                  </execution>
+              </executions>
+              <configuration>
+                  <mainClass>com.example.Main</mainClass>
+              </configuration>
+          </plugin>
+      </plugins>
+  </build>
+  
+  <dependencyManagement>
+      <dependencies>
+          <dependency>
+              <groupId>org.glassfish.jersey</groupId>
+              <artifactId>jersey-bom</artifactId>
+              <version>${jersey.version}</version>
+              <type>pom</type>
+              <scope>import</scope>
+          </dependency>
+      </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.9</version>
+        <scope>test</scope>
+    </dependency>
+    
+    <dependency>
+        <groupId>org.glassfish.jersey.containers</groupId>
+        <artifactId>jersey-container-grizzly2-http</artifactId>
+    </dependency>
+    
+    <!-- J -->
+	<dependency>
+		<groupId>com.jd.open.api</groupId>
+		<artifactId>open-api-sdk</artifactId>
+		<version>2.0.5</version>
+	</dependency> 
+
+	<!-- media type -->
+    <dependency>
+        <groupId>org.glassfish.jersey.media</groupId>
+        <artifactId>jersey-media-json-jackson</artifactId>
+        <version>${jersey.version}</version>
+    </dependency>
+    <!-- 	Jackson -->
+	<dependency>
+		<groupId>org.codehaus.jackson</groupId>
+		<artifactId>jackson-core-asl</artifactId>
+		<version>${jackson.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>org.codehaus.jackson</groupId>
+		<artifactId>jackson-mapper-asl</artifactId>
+		<version>${jackson.version}</version>
+	</dependency>
+	
+	<!-- log -->
+	<dependency>
+		<groupId>log4j</groupId>
+		<artifactId>log4j</artifactId>
+		<version>${log4j.version}</version>
+		<!--<scope>runtime</scope> -->
+	</dependency>
+	<dependency>
+		<groupId>org.slf4j</groupId>
+		<artifactId>slf4j-log4j12</artifactId>
+		<version>${slf4j.version}</version>
+		<exclusions>
+			<exclusion>
+				<groupId>log4j</groupId>
+				<artifactId>log4j</artifactId>
+			</exclusion>
+		</exclusions>
+	</dependency>
+  </dependencies>
+</project>
