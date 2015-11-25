@@ -11,7 +11,6 @@ import org.glassfish.jersey.server.ResourceConfig;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 
 public class Main {
-	//dd
 	private static final Logger LOGGER = Logger.getLogger(Main.class);
 	
 	public static final String BASE_URI = "http://localhost:9999/ebserver/";
