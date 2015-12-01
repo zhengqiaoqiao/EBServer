@@ -2,8 +2,10 @@ package com.qiao.EBServer.resource;
 
 import java.util.List;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -18,17 +20,27 @@ import com.jd.open.api.sdk.JdException;
 import com.jd.open.api.sdk.domain.ware.Sku;
 import com.jd.open.api.sdk.domain.ware.Ware;
 import com.jd.open.api.sdk.request.ware.SkuCustomGetRequest;
+import com.jd.open.api.sdk.request.ware.WareDelistingGetRequest;
+import com.jd.open.api.sdk.request.ware.WareGetRequest;
 import com.jd.open.api.sdk.request.ware.WareInfoByInfoRequest;
+import com.jd.open.api.sdk.request.ware.WareListingGetRequest;
 import com.jd.open.api.sdk.request.ware.WareSkuDeleteRequest;
 import com.jd.open.api.sdk.request.ware.WareSkuGetRequest;
 import com.jd.open.api.sdk.request.ware.WareSkuPriceUpdateRequest;
 import com.jd.open.api.sdk.request.ware.WareSkuStockUpdateRequest;
+import com.jd.open.api.sdk.request.ware.WareSkusGetRequest;
+import com.jd.open.api.sdk.request.ware.WareUpdateRequest;
 import com.jd.open.api.sdk.response.ware.SkuCustomGetResponse;
+import com.jd.open.api.sdk.response.ware.WareDelistingGetResponse;
+import com.jd.open.api.sdk.response.ware.WareGetResponse;
 import com.jd.open.api.sdk.response.ware.WareInfoByInfoSearchResponse;
+import com.jd.open.api.sdk.response.ware.WareListingGetResponse;
 import com.jd.open.api.sdk.response.ware.WareSkuDeleteResponse;
 import com.jd.open.api.sdk.response.ware.WareSkuGetResponse;
 import com.jd.open.api.sdk.response.ware.WareSkuPriceUpdateResponse;
 import com.jd.open.api.sdk.response.ware.WareSkuStockUpdateResponse;
+import com.jd.open.api.sdk.response.ware.WareSkusGetResponse;
+import com.jd.open.api.sdk.response.ware.WareUpdateResponse;
 
 /**
  * <p>Title: JDResource</p>
@@ -74,9 +86,9 @@ public class JDResource {
 		request.setPage(page);
 		request.setPageSize(pagesize);
 		if(st!=null)
-			request.setStartTime(st);
+			request.setStartModified(st);
 		if(et!=null)
-			request.setEndTime(et);
+			request.setEndModified(et);
 
 		WareInfoByInfoSearchResponse response = null;
 		try {
@@ -96,12 +108,202 @@ public class JDResource {
 		}
 		return list;
 	}
+	
+	//获取上架的商品信息
+	@Path("/ware/listing")
+	@GET
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	public List<Ware> searchListingWare(@QueryParam("accessToken") final String token, 
+			@QueryParam("appKey") final String key, 
+			@QueryParam("appSecret") final String secret, 
+			@QueryParam("page") final String page,
+			@QueryParam("pagesize") final String pagesize,
+			@QueryParam("st") final String st,
+			@QueryParam("et") final String et){
+		List<Ware> list = null;
+		WareListingGetRequest request=new WareListingGetRequest ();
+		request.setPage(page);
+		request.setPageSize(pagesize);
+		if(st!=null)
+			request.setStartModified(st);
+		if(et!=null)
+			request.setEndModified(et);
+
+		WareListingGetResponse  response = null;
+		try {
+			JdClient client = getClient(token, key, secret);
+			response = client.execute(request);
+		} catch (JdException e) {
+			// TODO Auto-generated catch block
+			LOGGER.error(e.getErrMsg());
+			
+		}
+
+		if(response!=null&&response.getCode().equals("0")){
+			list = response.getWareInfos();
+			LOGGER.info("上架的商品总数：" + response.getTotal());
+		}else{
+			LOGGER.warn(response.getMsg());
+		}
+		return list;
+	}
+	
+	//获取下架的商品信息
+	@Path("/ware/delisting")
+	@GET
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	public List<Ware> searchDelistingWare(@QueryParam("accessToken") final String token, 
+			@QueryParam("appKey") final String key, 
+			@QueryParam("appSecret") final String secret, 
+			@QueryParam("page") final String page,
+			@QueryParam("pagesize") final String pagesize,
+			@QueryParam("st") final String st,
+			@QueryParam("et") final String et){
+		List<Ware> list = null;
+		WareDelistingGetRequest request=new WareDelistingGetRequest();
+		request.setPage(page);
+		request.setPageSize(pagesize);
+		if(st!=null)
+			request.setStartModified(st);
+		if(et!=null)
+			request.setEndModified(et);
+
+		WareDelistingGetResponse response = null;
+		try {
+			JdClient client = getClient(token, key, secret);
+			response = client.execute(request);
+		} catch (JdException e) {
+			// TODO Auto-generated catch block
+			LOGGER.error(e.getErrMsg());
+			
+		}
+
+		if(response!=null&&response.getCode().equals("0")){
+			list = response.getWareInfos();
+			LOGGER.info("下架的商品总数：" + response.getTotal());
+		}else{
+			LOGGER.warn(response.getMsg());
+		}
+		return list;
+	}
+	
+	//获取商品信息
+	@Path("/ware/get")
+	@GET
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	public Ware getWareById(@QueryParam("accessToken") final String token, 
+			@QueryParam("appKey") final String key, 
+			@QueryParam("appSecret") final String secret, 
+			@QueryParam("wareid") final String wareid){
+		Ware ware = null;
+		WareGetRequest request=new WareGetRequest();
+		request.setWareId(wareid);
+		WareGetResponse response = null;
+		try {
+			JdClient client = getClient(token, key, secret);
+			response = client.execute(request);
+		} catch (JdException e) {
+			// TODO Auto-generated catch block
+			LOGGER.error(e.getErrMsg());
+		}
+
+		if(response!=null&&response.getCode().equals("0")){
+			ware = response.getWare();
+		}else{
+			LOGGER.warn(response.getMsg());
+		}
+		return ware;
+	}
+	
+	//获取商品信息
+	@Path("/ware/update")
+	@POST
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	public boolean updateWare(@QueryParam("accessToken") final String token, 
+			@QueryParam("appKey") final String key, 
+			@QueryParam("appSecret") final String secret, 
+			Ware ware){
+		boolean b = false;
+		WareUpdateRequest request=new WareUpdateRequest();
+		
+		request.setWareId(String.valueOf(ware.getWareId()));
+		
+		if(ware.getTitle()!=null)
+			request.setTitle(String.valueOf(ware.getTitle()));
+		if(ware.getWareStatus()!=null){
+			if(ware.getWareStatus().equals("ON_SALE")){
+				request.setOptionType("onsale");
+			}else{
+				request.setOptionType("offsale");
+			}
+		}
+			
+		if(ware.getItemNum()!=null)
+			request.setItemNum(String.valueOf(ware.getItemNum()));
+		if(ware.getStockNum()>=0)
+			request.setStockNum(String.valueOf(ware.getStockNum()));
+		if(ware.getCostPrice()!=null)
+			request.setCostPrice(String.valueOf(ware.getCostPrice()));
+		if(ware.getMarketPrice()!=null)
+			request.setMarketPrice(String.valueOf(ware.getMarketPrice()));
+		if(ware.getJdPrice()!=null)
+			request.setJdPrice(String.valueOf(ware.getJdPrice()));
+		if(ware.getDesc()!=null)
+			request.setNotes(String.valueOf(ware.getDesc()));
+		
+		WareUpdateResponse response = null;
+		try {
+			JdClient client = getClient(token, key, secret);
+			response = client.execute(request);
+		} catch (JdException e) {
+			// TODO Auto-generated catch block
+			LOGGER.error(e.getErrMsg());
+		}
+
+		if(response!=null&&response.getCode().equals("0")){
+			b = true;
+		}else{
+			LOGGER.warn(response.getMsg());
+		}
+		return b;
+	}
+	
+	//根据wareid获取sku信息
+	@Path("/ware/skus/get")
+	@GET
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	public List<Sku> getSkuByWareids(@QueryParam("accessToken") final String token, 
+			@QueryParam("appKey") final String key, 
+			@QueryParam("appSecret") final String secret, 
+			@QueryParam("wareids") final String wareids){
+		List<Sku> list = null;
+		
+		WareSkusGetRequest request=new WareSkusGetRequest();
+		request.setWareIds(wareids);
+		WareSkusGetResponse response = null;
+		try {
+			JdClient client = getClient(token, key, secret);
+			response = client.execute(request);
+		} catch (JdException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if(response!=null&&response.getCode().equals("0")){
+			list = response.getSkus();
+		}else{
+			System.out.println(response.getMsg());
+		}
+		
+		
+		return list;
+	}
 
 	//根据skuid/outid获取sku信息
 	@Path("/sku/get")
 	@GET
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	public Sku getSkuByOutid(@QueryParam("accessToken") final String token, 
+	public Sku getSkuById(@QueryParam("accessToken") final String token, 
 			@QueryParam("appKey") final String key, 
 			@QueryParam("appSecret") final String secret, 
 			@QueryParam("skuid") final String skuid,
@@ -188,7 +390,7 @@ public class JDResource {
 
 		request.setSkuId(skuid);
 		request.setOuterId(outid);
-		request.setJdPrice(price);
+		request.setPrice(price);
 
 		WareSkuPriceUpdateResponse response = null;
 		try {
