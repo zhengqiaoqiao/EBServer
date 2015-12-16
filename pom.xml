@@ -75,12 +75,19 @@
         <artifactId>jersey-container-grizzly2-http</artifactId>
     </dependency>
     
-    <!-- J -->
+    <!-- JD -->
 	<dependency>
 		<groupId>com.jd.open.api</groupId>
 		<artifactId>open-api-sdk</artifactId>
 		<version>2.0.5</version>
 	</dependency> 
+	
+	<!-- TAOBAO -->
+	<dependency>
+		<groupId>com.taobao.api</groupId>
+		<artifactId>taobao-sdk-java-online_standard</artifactId>
+		<version>20151122</version> 
+	</dependency>
 
 	<!-- media type -->
     <dependency>
@@ -118,5 +125,24 @@
 			</exclusion>
 		</exclusions>
 	</dependency>
+	<dependency>
+		<groupId>commons-logging</groupId>
+		<artifactId>commons-logging</artifactId>
+		<version>1.0.3</version>
+	</dependency>
+	<!-- mysql -->
+	<dependency>
+		<groupId>mysql</groupId>
+		<artifactId>mysql-connector-java</artifactId>
+		<version>5.1.37</version>
+	</dependency>
+	<!-- httpclient -->
+	<dependency>
+		<groupId>org.apache.httpcomponents</groupId>
+		<artifactId>httpclient</artifactId>
+		<version>4.0.1</version>
+	</dependency>
+
+
   </dependencies>
 </project>

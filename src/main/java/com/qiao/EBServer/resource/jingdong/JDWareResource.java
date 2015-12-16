@@ -1,4 +1,4 @@
-package com.qiao.EBServer.resource;
+package com.qiao.EBServer.resource.jingdong;
 
 import java.util.List;
 
@@ -48,10 +48,10 @@ import com.jd.open.api.sdk.response.ware.WareUpdateResponse;
  * @author: zheng.qq
  * @date: 2015年11月23日
  */
-@Path("jd")
-public class JDResource {
+@Path("jd/ware")
+public class JDWareResource {
 	
-	private static final Logger LOGGER = Logger.getLogger(JDResource.class);
+	private static final Logger LOGGER = Logger.getLogger(JDWareResource.class);
 	
 	private final String serverUrl = "http://gw.api.360buy.com/routerjson";
 	private String accessToken="661f08b6-cbf0-416c-aeeb-211c04fc3edd";
@@ -71,7 +71,7 @@ public class JDResource {
 	}
 	
 	//检索商品
-	@Path("/ware/list")
+	@Path("/list")
 	@GET
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	public List<Ware> searchWare(@QueryParam("accessToken") final String token, 
@@ -110,7 +110,7 @@ public class JDResource {
 	}
 	
 	//获取上架的商品信息
-	@Path("/ware/listing")
+	@Path("/listing")
 	@GET
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	public List<Ware> searchListingWare(@QueryParam("accessToken") final String token, 
@@ -149,7 +149,7 @@ public class JDResource {
 	}
 	
 	//获取下架的商品信息
-	@Path("/ware/delisting")
+	@Path("/delisting")
 	@GET
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	public List<Ware> searchDelistingWare(@QueryParam("accessToken") final String token, 
@@ -188,7 +188,7 @@ public class JDResource {
 	}
 	
 	//获取商品信息
-	@Path("/ware/get")
+	@Path("/get")
 	@GET
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	public Ware getWareById(@QueryParam("accessToken") final String token, 
@@ -216,7 +216,7 @@ public class JDResource {
 	}
 	
 	//获取商品信息
-	@Path("/ware/update")
+	@Path("/update")
 	@POST
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
@@ -270,7 +270,7 @@ public class JDResource {
 	}
 	
 	//根据wareid获取sku信息
-	@Path("/ware/skus/get")
+	@Path("/skus/get")
 	@GET
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	public List<Sku> getSkuByWareids(@QueryParam("accessToken") final String token, 

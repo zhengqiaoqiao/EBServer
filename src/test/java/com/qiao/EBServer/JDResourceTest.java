@@ -18,7 +18,7 @@ import org.junit.Test;
 
 import com.jd.open.api.sdk.domain.ware.Sku;
 import com.jd.open.api.sdk.domain.ware.Ware;
-import com.qiao.EBServer.resource.JDResource;
+import com.qiao.EBServer.resource.jingdong.JDWareResource;
 import com.qiao.EBServer.util.DateUtil;
 
 
@@ -37,7 +37,7 @@ public class JDResourceTest {
     private String appKey;
     private String appSecret;
     
-    private JDResource rs = new JDResource();
+    private JDWareResource rs = new JDWareResource();
 
     @Before
     public void setUp() throws Exception {
@@ -54,36 +54,12 @@ public class JDResourceTest {
     public void tearDown() throws Exception {
         server.shutdownNow();
     }
+    
+    /**
+     * 京东下架商品检索测试
+     */
 //    @Test
     public void test1() {
-
-        final List list= target.path("jd/ware/list")
-        		.queryParam("page", 1)
-        		.queryParam("pagesize", 1)
-        		.request().get(List.class);
-        
-        System.out.println(list.get(0).toString());
-    }
-    
-//    @Test
-    public void test2() {
-    	int total = 7932;
-    	int pagesize = 100;
-    	int pagenum = (int) Math.ceil((float)total / pagesize);
-    	System.out.println(pagenum);
-    	for(int i =1;i<=pagenum;i++){
-    		List<Ware> list = rs.searchWare(null, null, null, String.valueOf(i), String.valueOf(pagesize), null, null);
-    		for(int j=0;j<list.size();j++){
-    			Ware w = list.get(j);
-    			if(w.getCreated().equals(w.getModified())){
-    				System.out.println(w.getWareId()+"---"+w.getCreated());
-    			}
-    		}
-    	}
-    }
-    
-//    @Test
-    public void test3() {
 		List<Ware> list = rs.searchDelistingWare(accessToken, appKey, appSecret, "1", "1", null, null);
 		for(int i=0;i<list.size();i++){
 			Ware w = list.get(i);
@@ -105,9 +81,11 @@ public class JDResourceTest {
 			
 		}
     }
-    
-    @Test
-    public void test4() {
+    /**
+     * 京东sku信息测试
+     */
+//    @Test
+    public void test2() {
     	String skuid="10046988728";
 		Sku sku = rs.getSkuById(accessToken, appKey, appSecret, skuid, "");
 		String wareid = String.valueOf(sku.getWareId());
@@ -126,8 +104,11 @@ public class JDResourceTest {
 		System.out.println("sku的修改时间："+modifytime);
     }
     
+    /**
+     * 京东商品修改测试
+     */
 //    @Test
-    public void test5() {
+    public void test3() {
 		String wareid = "10008678551";
 		Ware ware = rs.getWareById(accessToken, appKey, appSecret, wareid);
 //		ware.setTitle("adidas阿迪三叶草2015年新款女子护腕头带指环AB2777");
@@ -135,15 +116,22 @@ public class JDResourceTest {
     	rs.updateWare(accessToken, appKey, appSecret, ware);
     }
     
+    /**
+     * 京东sku信息更新测试
+     */
 //    @Test
-    public void test6() {
+    public void test4() {
 		String skuid = "10046988728";
 		//229.00
 		rs.updateSkuPriceBySkyidOrOutid(accessToken, appKey, appSecret, skuid, "", "229");
 		
     }
-    @Test
-    public void test7() throws ParseException{
+    
+    /**
+     * 京东根据商品id获取sku信息测试
+     */
+//    @Test
+    public void test5() throws ParseException{
     	String wareid = "10008678551";
 		System.out.println("京东商品编码："+wareid);
 		List<Sku> skus = rs.getSkuByWareids(accessToken, appKey, appSecret, wareid);
@@ -170,8 +158,11 @@ public class JDResourceTest {
 		}
     }
     
+    /**
+     * 京东商品检索测试
+     */
 //    @Test
-    public void test8() {
+    public void test6() {
 		List<Ware> list = rs.searchWare(accessToken, appKey, appSecret, "1", "100", "2015-12-01 09:50:48", "2015-12-01 09:50:48");
 		for(int j=0;j<list.size();j++){
 			Ware w = list.get(j);

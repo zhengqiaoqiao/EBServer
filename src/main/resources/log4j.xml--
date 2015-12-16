@@ -39,7 +39,7 @@
 	</appender>
 	
 	<logger name="com.qiao.EBServer.resource">
-		<level value="warn" />
+		<level value="info" />
 	</logger>
 	
 	<logger name="com.qiao.EBServer.service">
