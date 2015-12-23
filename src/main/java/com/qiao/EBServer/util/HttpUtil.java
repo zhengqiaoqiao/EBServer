@@ -2,10 +2,12 @@ package com.qiao.EBServer.util;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.text.ParseException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.http.HttpEntity;
@@ -25,12 +27,12 @@ import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.SingleClientConnManager;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
-import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
 /**
@@ -95,75 +97,91 @@ public class HttpUtil {
 		return new DefaultHttpClient(connectionManager, httpParams);
 	}
 	
-	public static String get(String url) {  
-        DefaultHttpClient httpclient = new DefaultHttpClient();  
-        String body = null;  
-          
-        HttpGet get = new HttpGet(url);  
-        body = invoke(httpclient, get);  
-          
-        httpclient.getConnectionManager().shutdown();  
-          
-        return body;  
-    }  
-	
-	public static String post(String url, Map<String, String> params) {  
-		DefaultHttpClient httpclient = new DefaultHttpClient();  
-        String body = null;  
-          
-        HttpPost post = postForm(url, params, HTTP.UTF_8);  
-          
-        body = invoke(httpclient, post);  
-          
-        httpclient.getConnectionManager().shutdown();  
-          
-        return body;   
-	} 
-	
-	private static String invoke(DefaultHttpClient httpclient,  
-            HttpUriRequest httpost) {  
-          
-        HttpResponse response = sendRequest(httpclient, httpost);  
-        String body = null;
+	/**
+	 * HTTP通过get请求
+	 * @param url  
+	 * 				http://www.baidu.com    
+	 * 				http://www.baidu.com?id=1&name=a……
+	 * @param params
+	 * 				无参数设为null
+	 * @param charset
+	 * 				默认编码为UTF-8
+	 * @return
+	 */
+	public static String get(String url, Map<String, String> params, String charset){
+		String msg = null;
+		HttpClient httpclient = getHttpClient();  
 		try {
-			body = paseResponse(response);
-		} catch (ParseException e) {
+			HttpGet get = buildHttpGet(url, params, charset);
+			msg = invoke(httpclient, get);
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}  
+		}finally{
+			httpclient.getConnectionManager().shutdown();  
+		}
+		return msg;
+	}
+	
+	
+	/**
+	 * HTTP通过POST请求
+	 * @param url
+	 * @param params
+	 * @param charset
+	 * 			默认编码为UTF-8
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 */
+	public static String post(String url, Map<String, String> params, String charset) throws UnsupportedEncodingException {  
+		HttpClient httpclient = getHttpClient();  
+        String msg = null;  
           
-        return body;  
+        HttpPost post = null;
+		try {
+			post = buildHttpPost(url, params, charset);
+			msg = invoke(httpclient, post);  
+	       
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally{
+			 httpclient.getConnectionManager().shutdown();  
+		}
+        return msg;   
+	} 
+	
+	/**
+	 * 执行http请求
+	 * @param httpclient
+	 * @param hur
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 * 
+	 *
+	 */
+	private static String invoke(HttpClient httpclient,  
+            HttpUriRequest hur) throws ClientProtocolException, IOException {
+		HttpResponse response = null; 
+		String msg = null;
+        response = httpclient.execute(hur);  
+		HttpEntity entity = response.getEntity();    
+        String charset = EntityUtils.getContentCharSet(entity);  
+        msg = EntityUtils.toString(entity, charset);  
+  
+        return msg;  
     }  
 	
-	private static String paseResponse(HttpResponse response) throws ParseException {   
-        HttpEntity entity = response.getEntity();    
-        String charset = EntityUtils.getContentCharSet(entity);  
-        String body = null;  
-        try {  
-            body = EntityUtils.toString(entity, charset);  
-        } catch (IOException e) {  
-            e.printStackTrace();  
-        }  
-          
-        return body;  
-    }  
-  
-    private static HttpResponse sendRequest(DefaultHttpClient httpclient,  
-            HttpUriRequest hur) {  
-        HttpResponse response = null;  
-          
-        try {  
-            response = httpclient.execute(hur);  
-        } catch (ClientProtocolException e) {  
-            e.printStackTrace();  
-        } catch (IOException e) {  
-            e.printStackTrace();  
-        }  
-        return response;  
-    }  
-    
-    private static HttpPost postForm(String url, Map<String, String> params, String charset){  
-        
+	/**
+	 * 构造POST请求对象
+	 * @param url
+	 * @param params
+	 * @param charset
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 */
+    private static HttpPost buildHttpPost(String url, Map<String, String> params, String charset) throws UnsupportedEncodingException{  
         HttpPost httpost = new HttpPost(url); 
         List<NameValuePair> nvps = new ArrayList <NameValuePair>();  
         if(params!=null){
@@ -172,17 +190,75 @@ public class HttpUtil {
                 nvps.add(new BasicNameValuePair(key, params.get(key)));  
             }  
         }
-        try {  
-            httpost.setEntity(new UrlEncodedFormEntity(nvps, charset));  
-        } catch (UnsupportedEncodingException e) {  
-            e.printStackTrace();  
-        } 
-
+        httpost.setEntity(new UrlEncodedFormEntity(nvps, charset));  
         return httpost;  
     }  
     
+    /**
+     * 构造GET请求对象
+     * @param params
+     * @param charset
+     * @return
+     * @throws IOException
+     */
+    private static HttpGet buildHttpGet(String strUrl, Map<String, String> params, String charset) throws IOException {
+    	HttpGet get = null; 
+    	if(StringUtil.isEmpty(charset)){
+    		charset = "UTF-8";
+    	}
+    	URL url = new URL(strUrl);
+    	StringBuffer sb = new StringBuffer();
+		if (StringUtil.isEmpty(url.getQuery())) {
+			if (strUrl.endsWith("?")) {
+				sb.append(strUrl);
+			} else {
+				sb.append(strUrl);
+				sb.append("?");
+			}
+		} else {
+			if (strUrl.endsWith("&")) {
+				sb.append(strUrl);
+			} else {
+				sb.append(strUrl);
+				sb.append("&");
+			}
+		}
+    	if (params != null && params.isEmpty()) {
+			Set<Entry<String, String>> entries = params.entrySet();
+			boolean hasParam = false;
+			for (Entry<String, String> entry : entries) {
+				String name = entry.getKey();
+				String value = entry.getValue();
+				// 忽略参数名或参数值为空的参数
+				if (!StringUtil.isEmpty(name)&&!StringUtil.isEmpty(value)) {
+					if (hasParam) {
+						sb.append("&");
+					} else {
+						hasParam = true;
+					}
+					sb.append(name).append("=").append(URLEncoder.encode(value, charset));
+				}
+			}
+		}
+    	String furl = sb.toString();
+		if(furl.endsWith("&")){
+			furl = furl.substring(0, furl.length()-1);
+		}
+		get = new HttpGet(furl);  
+		System.out.println(furl);
+		return get;
+	}
+    
+    
+    
     public static void main (String[] args){
-    	String s = HttpUtil.post("http://www.baidu.com",null);
-    	System.out.println(s);
+    	String url = "http://www.baidu.com?i=1";
+    	Map<String, String> params = null;
+    	try {
+			buildHttpGet(url,params,null);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 }
