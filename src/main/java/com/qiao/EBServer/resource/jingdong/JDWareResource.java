@@ -215,59 +215,59 @@ public class JDWareResource {
 		return ware;
 	}
 	
-	//获取商品信息
-	@Path("/update")
-	@POST
-    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	public boolean updateWare(@QueryParam("accessToken") final String token, 
-			@QueryParam("appKey") final String key, 
-			@QueryParam("appSecret") final String secret, 
-			Ware ware){
-		boolean b = false;
-		WareUpdateRequest request=new WareUpdateRequest();
-		
-		request.setWareId(String.valueOf(ware.getWareId()));
-		
-		if(ware.getTitle()!=null)
-			request.setTitle(String.valueOf(ware.getTitle()));
-		if(ware.getWareStatus()!=null){
-			if(ware.getWareStatus().equals("ON_SALE")){
-				request.setOptionType("onsale");
-			}else{
-				request.setOptionType("offsale");
-			}
-		}
-			
-		if(ware.getItemNum()!=null)
-			request.setItemNum(String.valueOf(ware.getItemNum()));
-		if(ware.getStockNum()>=0)
-			request.setStockNum(String.valueOf(ware.getStockNum()));
-		if(ware.getCostPrice()!=null)
-			request.setCostPrice(String.valueOf(ware.getCostPrice()));
-		if(ware.getMarketPrice()!=null)
-			request.setMarketPrice(String.valueOf(ware.getMarketPrice()));
-		if(ware.getJdPrice()!=null)
-			request.setJdPrice(String.valueOf(ware.getJdPrice()));
-		if(ware.getDesc()!=null)
-			request.setNotes(String.valueOf(ware.getDesc()));
-		
-		WareUpdateResponse response = null;
-		try {
-			JdClient client = getClient(token, key, secret);
-			response = client.execute(request);
-		} catch (JdException e) {
-			// TODO Auto-generated catch block
-			LOGGER.error(e.getErrMsg());
-		}
-
-		if(response!=null&&response.getCode().equals("0")){
-			b = true;
-		}else{
-			LOGGER.warn(response.getMsg());
-		}
-		return b;
-	}
+//	//获取商品信息
+//	@Path("/update")
+//	@POST
+//    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+//	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+//	public boolean updateWare(@QueryParam("accessToken") final String token, 
+//			@QueryParam("appKey") final String key, 
+//			@QueryParam("appSecret") final String secret, 
+//			Ware ware){
+//		boolean b = false;
+//		WareUpdateRequest request=new WareUpdateRequest();
+//		
+//		request.setWareId(String.valueOf(ware.getWareId()));
+//		
+//		if(ware.getTitle()!=null)
+//			request.setTitle(String.valueOf(ware.getTitle()));
+//		if(ware.getWareStatus()!=null){
+//			if(ware.getWareStatus().equals("ON_SALE")){
+//				request.setOptionType("onsale");
+//			}else{
+//				request.setOptionType("offsale");
+//			}
+//		}
+//			
+//		if(ware.getItemNum()!=null)
+//			request.setItemNum(String.valueOf(ware.getItemNum()));
+//		if(ware.getStockNum()>=0)
+//			request.setStockNum(String.valueOf(ware.getStockNum()));
+//		if(ware.getCostPrice()!=null)
+//			request.setCostPrice(String.valueOf(ware.getCostPrice()));
+//		if(ware.getMarketPrice()!=null)
+//			request.setMarketPrice(String.valueOf(ware.getMarketPrice()));
+//		if(ware.getJdPrice()!=null)
+//			request.setJdPrice(String.valueOf(ware.getJdPrice()));
+//		if(ware.getDesc()!=null)
+//			request.setNotes(String.valueOf(ware.getDesc()));
+//		
+//		WareUpdateResponse response = null;
+//		try {
+//			JdClient client = getClient(token, key, secret);
+//			response = client.execute(request);
+//		} catch (JdException e) {
+//			// TODO Auto-generated catch block
+//			LOGGER.error(e.getErrMsg());
+//		}
+//
+//		if(response!=null&&response.getCode().equals("0")){
+//			b = true;
+//		}else{
+//			LOGGER.warn(response.getMsg());
+//		}
+//		return b;
+//	}
 	
 	//根据wareid获取sku信息
 	@Path("/skus/get")

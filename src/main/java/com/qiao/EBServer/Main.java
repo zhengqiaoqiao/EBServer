@@ -6,9 +6,12 @@ import java.net.URI;
 import org.apache.log4j.Logger;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.spring.SpringComponentProvider;
 
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
+import com.qiao.EBServer.filter.CorsFilter;
 
 public class Main {
 	private static final Logger LOGGER = Logger.getLogger(Main.class);
@@ -19,6 +22,9 @@ public class Main {
 	public static HttpServer startServer() {
 		final ResourceConfig rc = new ResourceConfig().packages("com.qiao.EBServer.resource");
 		rc.register(JacksonJsonProvider.class);
+		rc.register(CorsFilter.class);
+		rc.register(SpringComponentProvider.class);
+		rc.register(MultiPartFeature.class);
 		return GrizzlyHttpServerFactory.createHttpServer(URI.create(Main.BASE_URI), rc);
 	}
 

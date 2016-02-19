@@ -12,11 +12,11 @@
 
   <properties>
   	<jersey.version>2.17</jersey.version>
+  	<spring.version>3.2.3.RELEASE</spring.version>
   	<slf4j.version>1.4.3</slf4j.version>
 	<log4j.version>1.2.16</log4j.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-  
   <build>
       <plugins>
           <plugin>
@@ -49,18 +49,6 @@
       </plugins>
   </build>
   
-  <dependencyManagement>
-      <dependencies>
-          <dependency>
-              <groupId>org.glassfish.jersey</groupId>
-              <artifactId>jersey-bom</artifactId>
-              <version>${jersey.version}</version>
-              <type>pom</type>
-              <scope>import</scope>
-          </dependency>
-      </dependencies>
-  </dependencyManagement>
-
   <dependencies>
     <dependency>
         <groupId>junit</groupId>
@@ -68,34 +56,42 @@
         <version>4.9</version>
         <scope>test</scope>
     </dependency>
-    
+    <!-- jersey -->
     <dependency>
-        <groupId>org.glassfish.jersey.containers</groupId>
-        <artifactId>jersey-container-grizzly2-http</artifactId>
-    </dependency>
-    
-    <!-- JD -->
-	<dependency>
-		<groupId>com.jd.open.api</groupId>
-		<artifactId>open-api-sdk</artifactId>
-		<version>2.0.5</version>
-	</dependency> 
-	
-	<!-- TAOBAO -->
-	<dependency>
-		<groupId>com.taobao.api</groupId>
-		<artifactId>taobao-sdk-java-online_standard</artifactId>
-		<version>20151122</version> 
+		<groupId>org.glassfish.jersey.containers</groupId>
+		<artifactId>jersey-container-grizzly2-http</artifactId>
+		<version>2.22.2</version>
 	</dependency>
-
+	<!-- servlet -->
+	<dependency>
+		<groupId>javax.servlet</groupId>
+		<artifactId>javax.servlet-api</artifactId>
+		<version>3.1.0</version>
+	</dependency>
+	<!-- jersey-spring -->
+	<dependency>
+		<groupId>org.glassfish.jersey.ext</groupId>
+		<artifactId>jersey-spring3</artifactId>
+		<version>2.22.2</version>
+	</dependency>
 	<!-- media type -->
     <dependency>
         <groupId>org.glassfish.jersey.media</groupId>
         <artifactId>jersey-media-json-jackson</artifactId>
         <version>${jersey.version}</version>
     </dependency>
-   
-	
+    <!-- jarsey上传文件取参数@FormDataParam -->
+    <dependency>
+	    <groupId>org.glassfish.jersey.media</groupId>
+	    <artifactId>jersey-media-multipart</artifactId>
+	    <version>2.7</version>
+	</dependency>
+	<!-- spring -->
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-web</artifactId>
+		<version>3.2.3.RELEASE</version>
+	</dependency>
 	<!-- log -->
 	<dependency>
 		<groupId>log4j</groupId>
@@ -131,7 +127,17 @@
 		<artifactId>httpclient</artifactId>
 		<version>4.0.1</version>
 	</dependency>
-
-
+    <!-- JD -->
+	<dependency>
+		<groupId>com.jd.open.api</groupId>
+		<artifactId>open-api-sdk</artifactId>
+		<version>2.0.5</version>
+	</dependency> 
+	<!-- TAOBAO -->
+	<dependency>
+		<groupId>com.taobao.api</groupId>
+		<artifactId>taobao-sdk-java-online_standard</artifactId>
+		<version>20151122</version> 
+	</dependency>
   </dependencies>
 </project>

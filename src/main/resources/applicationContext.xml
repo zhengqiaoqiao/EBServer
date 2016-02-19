@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<!-- 定义受环境影响易变的变量 -->
+ 	<context:property-placeholder location="classpath:application.properties" />
+ 	<!-- 自动扫描 -->
+	<!-- 激活组件扫描功能,在包com.qiao.EBServer及其子包下面自动扫描通过注解配置的组件 -->
+	<context:component-scan base-package="com.qiao.EBServer"/>
+
+</beans>

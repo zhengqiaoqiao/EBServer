@@ -17,7 +17,7 @@ import com.qiao.EBServer.util.StringUtil;
 
 
 /**
- * <p>Title: TBWareResource</p>
+ * <p>Title: YinTaiItemResource</p>
  * <p>Description: </p>
  * @author: zheng.qq
  * @date: 2015年12月1日

@@ -113,7 +113,7 @@ public class JDResourceTest {
 		Ware ware = rs.getWareById(accessToken, appKey, appSecret, wareid);
 //		ware.setTitle("adidas阿迪三叶草2015年新款女子护腕头带指环AB2777");
 		ware.setWareStatus("ON_SALE");
-    	rs.updateWare(accessToken, appKey, appSecret, ware);
+//    	rs.updateWare(accessToken, appKey, appSecret, ware);
     }
     
     /**
