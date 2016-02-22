@@ -11,10 +11,6 @@ import javax.ws.rs.core.MediaType;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.jd.open.api.sdk.JdClient;
-import com.jd.open.api.sdk.JdException;
-import com.jd.open.api.sdk.request.ware.WareSkuStockUpdateRequest;
-import com.jd.open.api.sdk.response.ware.WareSkuStockUpdateResponse;
 import com.qiao.EBServer.domain.User;
 import com.qiao.EBServer.service.UserService;
 

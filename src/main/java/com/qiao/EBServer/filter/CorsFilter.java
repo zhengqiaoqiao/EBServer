@@ -45,9 +45,7 @@ public class CorsFilter implements ClientRequestFilter, ClientResponseFilter,
 		// TODO Auto-generated method stub
 		LOGGER.info("服务端响应过滤");
 		// The following was required to permit testing outside the Application Server Container
-		String s = requestCtx.getHeaderString("Origin");
-		String s1 = requestCtx.getHeaderString("Content-Type");
-		responseCtx.getHeaders().add("Access-Control-Allow-Origin", s);
+		responseCtx.getHeaders().add("Access-Control-Allow-Origin", requestCtx.getHeaderString("Origin"));
 	    responseCtx.getHeaders().add("Access-Control-Allow-Credentials", "true");
 	    responseCtx.getHeaders().add("Access-Control-Allow-Methods", "OPTIONS, GET, POST, DELETE, PUT");
 	    responseCtx.getHeaders().add("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Origin, Access-Control-Allow-Credentials, Access-Control-Allow-Methods, Access-Control-Allow-Headers, Authorization, X-Requested-With");

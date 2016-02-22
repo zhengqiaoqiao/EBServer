@@ -1,11 +1,9 @@
 package com.qiao.EBServer.service;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.stereotype.Service;
 
 import com.jd.open.api.sdk.internal.util.StringUtil;
