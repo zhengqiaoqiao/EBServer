@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache>
+ 	<!-- 数据缓存存放目录 -->
+	<diskStore path="e:\\cache" />
+	<!-- DefaultCache setting. 
+	 maxElementsInMemory: 设置基于内存的缓存中可存放的对象最大数目    
+	 maxElementsOnDisk: 持久化到硬盘的缓存元素的最大数量
+     eternal: 设置对象是否为永久的, true表示永不过期, 此时将忽略timeToIdleSeconds 和 timeToLiveSeconds属性; 默认值是false 
+     timeToIdleSeconds:设置对象空闲最长时间,以秒为单位, 超过这个时间,对象过期。   当对象过期时,EHCache会把它从缓存中清除。如果此值为0,表示对象可以无限期地处于空闲状态。 
+     timeToLiveSeconds:设置对象生存最长时间,超过这个时间,对象过期。 如果此值为0,表示对象可以无限期地存在于缓存中. 该属性值必须大于或等于 timeToIdleSeconds 属性值 
+     overflowToDisk:设置基于内存的缓存中的对象数目达到上限后,是否把溢出的对象写到基于硬盘的缓存中
+     diskPersistent:持久化可在Element的diskPersistent配置项中配置，如果配置为“false”或是“omitted”在CacheManager shutdown或是startup后，用来缓存Element的文件将被清除掉。如果设置为“true”，data和index文件会被保存下来，对于新创建的CacheManager Element也是可用的。
+                三种缓存算法：LRU-最近最少使用、LFU-较少频率使用和FIFO-先进先出。
+     -->
+	<defaultCache 
+		maxElementsInMemory="1000000" 
+		memoryStoreEvictionPolicy="LRU" 
+		eternal="false"
+		timeToIdleSeconds="600" 
+		timeToLiveSeconds="600" 
+		overflowToDisk="true" 
+		diskPersistent="true" />
+</ehcache>

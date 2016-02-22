@@ -10,12 +10,8 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.container.ContainerResponseContext;
 import javax.ws.rs.container.ContainerResponseFilter;
-import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
-import org.glassfish.jersey.client.ClientRequest;
-
-import com.qiao.EBServer.resource.dotest.TestResource;
 
 /**
  * <p>Title: MyClientRequestFilter</p>

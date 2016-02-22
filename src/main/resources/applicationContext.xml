@@ -2,14 +2,109 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		http://www.springframework.org/schema/tx  http://www.springframework.org/schema/tx/spring-tx-3.0.xsd"	
+	>
 
 	<!-- 定义受环境影响易变的变量 -->
  	<context:property-placeholder location="classpath:application.properties" />
  	<!-- 自动扫描 -->
 	<!-- 激活组件扫描功能,在包com.qiao.EBServer及其子包下面自动扫描通过注解配置的组件 -->
 	<context:component-scan base-package="com.qiao.EBServer"/>
+	
+	<!-- c3p0 -->
+	<bean id="dataSource" name="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+		<property name="driverClass"><value>${jdbc.driver}</value></property>
+		<property name="jdbcUrl"><value>${jdbc.url}</value></property>
+		<property name="user"><value>${jdbc.username}</value></property>
+		<property name="password"><value>${jdbc.password}</value></property>
+		<property name="minPoolSize"><value>${c3p0.minPoolSize}</value></property>
+		<property name="maxPoolSize"><value>${c3p0.maxPoolSize}</value></property>
+		<property name="initialPoolSize"><value>${c3p0.initialPoolSize}</value></property>
+		<property name="maxIdleTime"><value>${c3p0.maxIdleTime}</value></property>
+		<property name="acquireIncrement"><value>${c3p0.acquireIncrement}</value></property>
+		<property name="idleConnectionTestPeriod"><value>${c3p0.idleConnectionTestPeriod}</value></property>
+		<property name="acquireRetryAttempts"><value>${c3p0.acquireRetryAttempts}</value></property>
+		<property name="numHelperThreads"><value>${c3p0.numHelperThreads}</value></property>
+		<property name="acquireRetryDelay"><value>${c3p0.acquireRetryDelay}</value></property>
+		<property name="propertyCycle"><value>${c3p0.propertyCycle}</value></property>
+	</bean>
+	<!-- Hibernate配置 -->
+	<bean id="sessionFactory"  name="sessionFactory"  class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean" >
+		<property name="dataSource" ref="dataSource" />
+		<property name="namingStrategy">
+			<bean class="org.hibernate.cfg.ImprovedNamingStrategy" />
+		</property>
+		<property name="hibernateProperties">
+			<props>
+			 	<!-- 数据库方言 -->  
+				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+				
+				<!-- 打印sql语句控制台 -->  
+				<prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+				<prop key="hibernate.format_sql">${hibernate.format_sql}</prop>
+				<prop key="hibernate.jdbc.fetch_size">${hibernate.fetch_size}</prop>
+				<prop key="hibernate.jdbc.batch_size">${hibernate.batch_size}</prop>
+				<prop key="hibernate.connection.release_mode">${hibernate.connection.release_mode}</prop>
+			  	<!-- 生成数据表的策略 -->
+			  	<!-- 可以配置 update，create等等，create每次都会删除表在重新创建表接口，update只会更新已有的表结构，但是不会创建表结构 -->  
+                <prop key="hibernate.hbm2ddl.auto">update</prop>  
+                
+                <!-- 配置二级缓存 -->  
+<!--                 是否缓存查询结果(条件查询时用)。可选值：true：缓存查询结果。false：不缓存查询结果 (注意查询还是要执行query.setCacheable(true))-->
+                <prop key="hibernate.cache.use_query_cache">${hibernate.cache.use_query_cache}</prop>
+<!--                 否启用二级缓存。可选值：true：启用二级缓存。false：不使用二级缓存。 -->
+                <prop key="hibernate.cache.use_second_level_cache">${hibernate.cache.use_second_level_cache}</prop>
+                
+                <!-- 配置ehcache缓存  -->  
+                <prop key="hibernate.cache.provider_class">${hibernate.cache.provider_class}</prop>  
+                <prop key="hibernate.cache.provider_configuration_file_resource_path">${hibernate.cache.provider_configuration_file_resource_path}</prop>  
+				
+				<!-- 配置 hibernate boolean型与 数据库 char(1) 的映射 after_statement  -->
+				<prop key="query.substitutions">true 1,false 0</prop>
+				
+				<!-- 最优化二级缓存 -->
+<!-- 				是否使用结构化的方式缓存对象。可选值：true：结构化方式缓存对象。false：不使用结构化的方式缓存对象。 -->
+				<prop key="hibernate.cache.use_structured_entries">${hibernate.cache.use_structured_entries}</prop>
+				
+				<prop key="hibernate.search.autoregister_listeners">${hibernate.search.autoregister_listeners}</prop>
+
+				<prop key="hibernate.current_session_context_class">thread</prop>
+				
+				
+			</props>
+		</property>
+ 		<!-- 使用注解配置hibernate 的关系映射，domain对象都放在com.qiao.model.pojo下面，其他包下面的实体不会扫描 使用注解@Entity-->  
+		<property name="packagesToScan">
+			<list> 
+				<value>com.qiao.EBServer.domain</value>
+			</list>
+		</property>
+	</bean>
+	<!-- 使用Spring中的HibernateTemplate -->
+	<bean id="hibernateTemplate" class="org.springframework.orm.hibernate3.HibernateTemplate">
+        <property name="sessionFactory">
+            <ref bean="sessionFactory"/>
+        </property>
+       
+	</bean>
+	
+	<!-- 使用Spring中的JDBC -->
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+	   <property name="dataSource">
+	    <ref bean="dataSource" />
+	   </property>
+	</bean>
+	
+  	<!-- 配置事务管理器，使用spring管理事务，一般放在service层管理事务  -->  
+	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<!-- 使用注解配置事务，也可以使用表达式通配符 -->  
+	<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" />
 
 </beans>
