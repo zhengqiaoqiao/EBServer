@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.QueryParam;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.hibernate.annotations.Cache;
@@ -45,12 +47,14 @@ public class User implements java.io.Serializable {
 	 * 姓名
 	 */
 	@Column(name = "name")
+	@QueryParam("name")
 	private String name;
 
 	/**
 	 * 年龄
 	 */
 	@Column(name = "age")
+	@QueryParam("name")
 	private String age;
 
 	/**

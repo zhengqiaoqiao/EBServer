@@ -26,5 +26,8 @@ public class UserService {
 		return list;
 	}
 	
-	
+	public List<User> findUsers(User user) {
+		List<User> list = userDao.list(user);
+		return list;
+	}
 }
