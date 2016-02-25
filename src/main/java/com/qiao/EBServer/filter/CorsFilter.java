@@ -14,7 +14,7 @@ import javax.ws.rs.container.ContainerResponseFilter;
 import org.apache.log4j.Logger;
 
 /**
- * <p>Title: MyClientRequestFilter</p>
+ * <p>Title: CorsFilter</p>
  * <p>Description: </p>
  * @author: zheng.qq
  * @date: 2016年2月16日
